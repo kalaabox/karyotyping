@@ -187,10 +187,40 @@ a{
 <section class="container">
     <h2 class="section-title">Bioinformatics Tools Used</h2>
     <div class="card-grid">
-        <div class="card"><h3>Read Processing</h3>FastQC, Trimmomatic, BWA, STAR</div>
-        <div class="card"><h3>Read Mapping</h3>HTSeq, BedTools</div>
-        <div class="card"><h3>Tag Counting</h3>Samtools, IGV</div>
-        <div class="card"><h3>Copy Number Analysis</h3>GISTIC, CNVkit</div>
+        <div class="card"><h3>Read Processing</h3>Read processing means cleaning and preparing sequencing data before analysis.
+
+When DNA is sequenced, the machine produces many short DNA fragments called reads.
+These reads may contain:
+
+Low-quality bases
+
+Adapter sequences
+            Tools - FastQC, Trimmomatic, BWA, STAR</div>
+        <div class="card"><h3>Read Mapping</h3>Read mapping means matching sequencing reads to a known reference genome.
+
+Think of it like:
+
+You have puzzle pieces (reads)
+You place them on a reference genome to see where they belong.
+            Tools - HTSeq, BedTools</div>
+        <div class="card"><h3>Tag Counting</h3>Tag counting means counting how many reads fall onto each gene or region.
+
+In digital karyotyping:
+
+More reads = more DNA copies
+
+Fewer reads = deletion or loss
+            Tools - Samtools, IGV</div>
+        <div class="card"><h3>Copy Number Analysis</h3>This is the most important step in digital karyotyping.
+
+Here, software analyzes read counts to detect:
+
+🔻 Deletions (loss)
+
+🔺 Gains
+
+🚨 Amplifications
+            Tools - GISTIC, CNVkit</div>
     </div>
 </section>
 
@@ -235,3 +265,4 @@ function goToTool(){
 
 </body>
 </html>
+
