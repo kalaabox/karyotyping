@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Digital Karyotyping Real Lab</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI,sans-serif;
+    background:#f7faff;
+    color:#1f2f57;
+}
+.container{
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+h1{
+    text-align:center;
+    font-size:40px;
+    background:linear-gradient(90deg,#2aa8e0,#7b4cc9);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+.card{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+}
+.info{
+    background:#eef4ff;
+    padding:10px;
+    border-radius:8px;
+    margin:10px 0;
+    font-size:14px;
+}
+textarea{
+    width:100%;
+    height:90px;
+    font-family:monospace;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+button{
+    background:#6b4cc9;
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:20px;
+    margin-top:10px;
+    cursor:pointer;
+}
+button:hover{background:#5237a8;}
+.output{
+    background:#edf6ff;
+    padding:10px;
+    border-radius:8px;
+    margin-top:10px;
+    white-space:pre-wrap;
+    font-family:monospace;
+}
+.error{background:#ffe6e6;color:#d10000;}
+.hidden{display:none;}
+.final{
+    background:#dff5e8;
+    border-left:6px solid #2aa866;
+}
+.step-title{
+    font-size:22px;
+    color:#2f4b95;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Digital Karyotyping — Bioinformatics Lab</h1>
+
+<div class="card">
+<h2>🧬 Digital Karyotyping (Bioinformatics)</h2>
+<div class="info">
+Pipeline used in real analysis:<br>
+FASTQ Reads → FastQC → Trimmomatic → BWA Mapping → HTSeq Count → CNVkit → Digital Karyotype
+</div>
+</div>
+
+<div class="card">
+<h2>Select Gene (Training Dataset)</h2>
+<div class="info">
+TP53 = Deletion model | MYC = Amplification model | EGFR = Copy Gain model
+</div>
+
+<select id="geneSelect">
+<option value="TP53">TP53 (Chromosome 17)</option>
+<option value="MYC">MYC (Chromosome 8)</option>
+<option value="EGFR">EGFR (Chromosome 7)</option>
+</select>
+<button onclick="loadGene()">Load Reads</button>
+
+<div id="reads" class="output hidden"></div>
+</div>
+
+<!-- STEP 1 -->
+<div class="card hidden" id="step1">
+<div class="step-title">Step 1 — FastQC</div>
+<div class="info">Quality check for sequencing reads.</div>
+<textarea id="in1" placeholder="Paste raw reads"></textarea>
+<button onclick="runFastQC()">Run FastQC</button>
+<div id="out1" class="output hidden"></div>
+</div>
+
+<!-- STEP 2 -->
+<div class="card hidden" id="step2">
+<div class="step-title">Step 2 — Trimmomatic</div>
+<div class="info">Trim adapters & low-quality bases.</div>
+<textarea id="in2" placeholder="Paste FastQC output"></textarea>
+<button onclick="runTrim()">Run Trimmomatic</button>
+<div id="out2" class="output hidden"></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="card hidden" id="step3">
+<div class="step-title">Step 3 — BWA Mapping</div>
+<div class="info">Align reads to reference genome.</div>
+<textarea id="in3" placeholder="Paste Trimmomatic output"></textarea>
+<button onclick="runBWA()">Run BWA</button>
+<div id="out3" class="output hidden"></div>
+</div>
+
+<!-- STEP 4 -->
+<div class="card hidden" id="step4">
+<div class="step-title">Step 4 — HTSeq Counting</div>
+<div class="info">Count mapped reads per gene.</div>
+<textarea id="in4" placeholder="Paste BWA output"></textarea>
+<button onclick="runHTSeq()">Run HTSeq</button>
+<div id="out4" class="output hidden"></div>
+</div>
+
+<!-- STEP 5 -->
+<div class="card hidden" id="step5">
+<div class="step-title">Step 5 — CNVkit</div>
+<div class="info">Detect copy number variation.</div>
+<textarea id="in5" placeholder="Paste HTSeq output"></textarea>
+<button onclick="runCNV()">Run CNVkit</button>
+<div id="out5" class="output hidden"></div>
+</div>
+
+<div class="card hidden final" id="final">
+<div class="step-title">🎯 Final Digital Karyotype</div>
+<div id="finalResult" class="output"></div>
+</div>
+
+</div>
+
+<script>
+
+let gene="";
+
+const data={
+TP53:{
+reads:`@SEQ_ID_001 TP53 ACGTAGCTAGCT
+@SEQ_ID_002 TP53 CGTAGCTAGCTA
+@SEQ_ID_003 TP53 GCTAGCTAACGT`,
+count:120,
+cnv:"LOSS (Deletion)",
+depth:"log2=-1.25"
+},
+MYC:{
+reads:`@SEQ_ID_001 MYC GGGTTACGGGTA
+@SEQ_ID_002 MYC GGGTTACGGGTA
+@SEQ_ID_003 MYC GGGTTACGGGTA`,
+count:980,
+cnv:"AMPLIFICATION",
+depth:"log2=+2.40"
+},
+EGFR:{
+reads:`@SEQ_ID_001 EGFR TGCATCGTAGCA
+@SEQ_ID_002 EGFR TGCATCGTAGCT
+@SEQ_ID_003 EGFR TGCATCGTAGCG`,
+count:450,
+cnv:"COPY NUMBER GAIN",
+depth:"log2=+0.85"
+}
+};
+
+function showError(id,msg){
+let e=document.getElementById(id);
+e.innerText=msg;
+e.classList.remove("hidden");
+e.classList.add("error");
+}
+function showOut(id,msg){
+let e=document.getElementById(id);
+e.innerText=msg;
+e.classList.remove("hidden","error");
+}
+
+function loadGene(){
+gene=document.getElementById("geneSelect").value;
+showOut("reads",
+`# RAW FASTQ READS
+Gene: ${gene}
+
+${data[gene].reads}
+
+Copy these reads → FastQC`);
+document.getElementById("step1").classList.remove("hidden");
+}
+
+function runFastQC(){
+if(!in1.value.trim()) return showError("out1","❌ ERROR: paste reads first");
+
+showOut("out1",
+`>> FastQC v0.11.9
+Filename: ${gene}.fastq
+Total Sequences: 3000
+GC Content: 48%
+Per base quality: PASS
+Adapter Content: PASS
+
+Output: fastqc_report.html`);
+step2.classList.remove("hidden");
+}
+
+function runTrim(){
+if(!in2.value.trim()) return showError("out2","❌ ERROR: paste FastQC output");
+
+showOut("out2",
+`TrimmomaticPE: Running...
+Input Reads: 3000
+Surviving Reads: 2890 (96.3%)
+
+Output:
+${gene}_clean_R1.fastq
+${gene}_clean_R2.fastq`);
+step3.classList.remove("hidden");
+}
+
+function runBWA(){
+if(!in3.value.trim()) return showError("out3","❌ ERROR: paste trimming output");
+
+showOut("out3",
+`bwa mem hg38.fa ${gene}_clean.fastq
+[main] 2890 reads processed
+Mapped Reads: 2865 (99.1%)
+
+Output file:
+${gene}.sorted.bam`);
+step4.classList.remove("hidden");
+}
+
+function runHTSeq(){
+if(!in4.value.trim()) return showError("out4","❌ ERROR: paste mapping output");
+
+showOut("out4",
+`HTSeq-count result
+Gene_ID    Reads
+${gene}       ${data[gene].count}
+
+__no_feature  12
+__ambiguous   3`);
+step5.classList.remove("hidden");
+}
+
+function runCNV(){
+if(!in5.value.trim()) return showError("out5","❌ ERROR: paste HTSeq output");
+
+showOut("out5",
+`CNVkit analysis
+Target: ${gene}
+Read depth: ${data[gene].depth}
+Copy number state: ${data[gene].cnv}`);
+
+final.classList.remove("hidden");
+finalResult.innerText=
+`DIGITAL KARYOTYPE REPORT
+
+Gene: ${gene}
+Copy Number Result: ${data[gene].cnv}
+Depth Signal: ${data[gene].depth}
+
+✔ Analysis Completed
+Page restarting in 8 sec...`;
+
+setTimeout(()=>location.reload(),8000);
+}
+
+</script>
+
+</body>
+</html>

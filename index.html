@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Karyotyping | SeqAnalyzer</title>
+
+<style>
+/* ===== GLOBAL ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+body{
+    background:#ffffff;
+    color:#1d2b4f;
+    line-height:1.6;
+}
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* ===== HEADER ===== */
+header{
+    text-align:center;
+    padding:40px 0 20px;
+}
+header h1{
+    font-size:55px;
+    font-weight:800;
+    background:linear-gradient(90deg,#2aa8e0,#7b4cc9);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+header h2{
+    font-size:22px;
+    margin-top:8px;
+    color:#333;
+}
+.sub{
+    margin-top:10px;
+    font-size:16px;
+    color:#666;
+}
+
+/* ===== SECTION ===== */
+section{
+    padding:40px 0;
+}
+.section-title{
+    font-size:32px;
+    margin-bottom:20px;
+    color:#223c7a;
+    border-left:6px solid #5d7eea;
+    padding-left:12px;
+}
+
+/* ===== CARDS ===== */
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+.card{
+    background:#f7f9ff;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+.card:hover{
+    transform:translateY(-5px);
+}
+.card h3{
+    color:#2a4d9f;
+    margin-bottom:10px;
+}
+
+/* ===== STEPS ===== */
+.steps{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+.step{
+    background:#eef3ff;
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.06);
+}
+.step-number{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:#5e7ce2;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    font-weight:bold;
+}
+
+/* ===== BUTTONS ===== */
+.btn-area{
+    text-align:center;
+    margin-top:30px;
+}
+.btn{
+    display:inline-block;
+    padding:12px 28px;
+    margin:10px;
+    border:none;
+    border-radius:30px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:none;
+    transition:0.3s;
+}
+.download{
+    background:#2aa8e0;
+    color:white;
+}
+.download:hover{
+    background:#1f8bc0;
+}
+.next{
+    background:#7b4cc9;
+    color:white;
+}
+.next:hover{
+    background:#6239a8;
+}
+
+/* ===== FOOTER ===== */
+footer{
+    background:#f2f5fc;
+    text-align:center;
+    padding:25px;
+    margin-top:40px;
+    color:#555;
+    font-size:15px;
+}
+a{
+    color:#2aa8e0;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<header class="container">
+    <h1>Digital Karyotyping</h1>
+    <h2>A Bioinformatics Approach</h2>
+    <p class="sub">
+        Made by - <strong>SeqAnalyzer (MSME Registered)</strong><br>
+        Website: <a href="https://www.seqanalyzer.com" target="_blank">www.seqanalyzer.com</a><br>
+        Poster made by <strong>Prathmesh Tripathi</strong> & <strong>Vishal Kumar Vind</strong>
+    </p>
+</header>
+
+<section class="container">
+    <h2 class="section-title">About Digital Karyotyping</h2>
+    <div class="card">
+        Digital karyotyping is a bioinformatics-based method used to detect chromosomal copy number variations using sequencing data. 
+        Instead of microscope-based chromosome analysis, it uses computational tools to map DNA reads, count tags and identify genomic gains or losses with high resolution.
+    </div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Workflow Steps (From Poster)</h2>
+    <div class="steps">
+        <div class="step"><div class="step-number">1</div><h3>DNA Extraction</h3><p>Sample preparation & DNA isolation.</p></div>
+        <div class="step"><div class="step-number">2</div><h3>DNA Fragmentation</h3><p>DNA broken into small sequence tags.</p></div>
+        <div class="step"><div class="step-number">3</div><h3>Sequencing Tags</h3><p>NGS generates digital sequence data.</p></div>
+        <div class="step"><div class="step-number">4</div><h3>Data Analysis</h3><p>Bioinformatics pipeline detects CNVs.</p></div>
+    </div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Bioinformatics Tools Used</h2>
+    <div class="card-grid">
+        <div class="card"><h3>Read Processing</h3>FastQC, Trimmomatic, BWA, STAR</div>
+        <div class="card"><h3>Read Mapping</h3>HTSeq, BedTools</div>
+        <div class="card"><h3>Tag Counting</h3>Samtools, IGV</div>
+        <div class="card"><h3>Copy Number Analysis</h3>GISTIC, CNVkit</div>
+    </div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Scope & Uses</h2>
+    <div class="card-grid">
+        <div class="card"><h3>Cancer Genomics</h3>Detect chromosomal amplifications and deletions.</div>
+        <div class="card"><h3>Clinical Research</h3>High-resolution genome variation analysis.</div>
+        <div class="card"><h3>Precision Medicine</h3>Supports personalized treatment strategies.</div>
+    </div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Why Digital Karyotyping is Beneficial</h2>
+    <div class="card">
+        ✔ Higher resolution than traditional karyotyping<br>
+        ✔ Detects small copy number variations<br>
+        ✔ Fully digital and reproducible results<br>
+        ✔ Faster computational analysis<br>
+        ✔ Suitable for large-scale genomic studies
+    </div>
+
+    <div class="btn-area">
+        <button class="btn download" onclick="downloadPoster()">Download Poster</button>
+        <button class="btn next" onclick="goToTool()">Click to Use Tool</button>
+    </div>
+</section>
+
+<footer>
+    © 2026 SeqAnalyzer | Digital Karyotyping Educational Portal
+</footer>
+
+<script>
+function downloadPoster(){
+    alert("Download function added! (Attach poster file link here)");
+}
+
+function goToTool(){
+    window.location.href = "tool.html";
+}
+</script>
+
+</body>
+</html>
